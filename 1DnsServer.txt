@@ -1,0 +1,58 @@
+cp -R /etc/bind/db.local /etc/bind/ukk-satria.net
+cp -R /etc/bind/db.127 /etc/bind/ukk-satria.net.reverse
+-
+nano /etc/bind/ukk-satria.net
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     ukk-satria.net. root.ukk-satria.net. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      ukk-satria.net.
+@       IN      A       10.10.10.77
+www.ukk-farhan.net.     IN      CNAME   ukk-satria.net.
+---------------------------------------------------------------
+nano /etc/bind/ukk-satria.net.reverse
+;
+; BIND reverse data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     ukk-satria.net. root.ukk-satria.net. (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@      IN      NS      ukk-satria.net.
+77     IN      PTR     ukk-satria.net.
+77     IN      PTR     www.ukk-satria.net.
+---------------------------------------------------------------
+nano /etc/bind/named.conf.local
+// Forward Zone
+zone "ukk-satria.net" {
+        type master;
+        file "/etc/bind/ukk-satria.net";
+};
+
+// Reverse Zone
+zone "10.10.10.in-addr.arpa" {
+        type master;
+        file "/etc/bind/ukk-satria.net.reverse";
+};
+
+systemctl restart named.service
+nano /etc/resolv.conf
+------------------------
+nameserver 10.10.10.77
+search ukk-satria.net
+------------------------
+nslookup 10.10.10.77 + ukk-satria.net + www.ukk-satria.net
+(jangan lupa setting dns di windows) IPV4
+//lakukan ping di cmd 
+//10.10.10.77 + ukk-satria.net + www.ukk-satria.net

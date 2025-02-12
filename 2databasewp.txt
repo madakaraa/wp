@@ -1,0 +1,8 @@
+mysql -u root
+-
+CREATE DATABASE wordpress_db;
+-
+GRANT ALL ON wordpress_db.* TO 'wp_user'@'localhost' IDENTIFIED BY 'ukk-satria' WITH GRANT OPTION;
+-
+FLUSH PRIVILEGES;
+EXIT
